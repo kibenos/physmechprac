@@ -5,7 +5,7 @@ figure(1)
 
 x0     = 0;
 xmax   = 8 * pi;
-diffop = [0 0 1 1];
+diffop = [0 0 1];
 itmax  = 10;
 itbase = 2;
 
