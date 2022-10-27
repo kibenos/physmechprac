@@ -1,3 +1,3 @@
 function uan = danalytics(x)
-    uan = cos(x);
+    uan = -sin(x);
 end

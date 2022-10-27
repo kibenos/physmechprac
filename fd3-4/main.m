@@ -5,34 +5,59 @@ figure(1)
 
 x0     = 0;
 xmax   = 8 * pi;
-diffop = [0 1 0];
+diffop = [0 0 1 1];
 itmax  = 10;
-itbase = (sqrt(5)+1)/2;
-
+itbase = 2;
 
 %% init
-x_prev     = [];
-du_prev    = [];
-eps_prev   = 0;
-np_prev    = 0;
-hmax_prev  = 0;
+x_prev    = [];
+du_prev   = [];
+eps_prev  = 0;
+np_prev   = 0;
+hmax_prev = 0;
+hmin_prev = 0;
 
-xfin  = linspace(x0, xmax, 2^(meshmax + 2));
+xfin  = linspace(x0, xmax, ceil(itbase^(itmax + 2)));
 dufin = danalytics(xfin);
 
 %% table header
-w  = max(7, round(log10(2^(meshmax + 2) + 1) + 1));
-fprintf('%*cpoints |    max h     |      ε       |    rat ε    |    order    |\n', w - 6, '');
-fprintf('%-*c-------|--------------|--------------|-------------|-------------|\n', w - 6, '-');
+w  = max(7, round(log10(itbase^(itmax + 2) + 1) + 1));
+fprintf('%spoints |    min h     |    max h     |      ε       |    rat ε    |    order    |\n', repmat(' ', 1, w - 6));
+fprintf('%s-------|--------------|--------------|--------------|-------------|-------------|\n', repmat('-', 1, w - 6));
 
 %% main cycle
 for it=1:itmax
-  nr    = ceil(itbase^(it + 1));
-  ng    = ceil(itbase^(it + 1));
+  
+% init random with regular meshing
+  if it == 1
+      np = ceil(itbase^(it + 2));
+      x  = makemesh(x0, xmax, [], [], np-2, 0, 1.0e-17);
+  else
+      np = 2 * np_prev - 1;
+      x  = zeros(1, np);
+      for i=1:np
+          if mod(i, 2)
+              x(i) = x_prev((i+1)/2);
+          else
+              x(i) = (x_prev(i/2) + x_prev((i+2)/2)) / 2;
+          end
+           
+      end
+  end
+  
+% regular
+%   np    = ceil(itbase^(it + 2));
+%   x     = linspace(x0, xmax, np);
 
-  %x     = linspace(x0, xmax, 2^(it+2)); 
-  x     = makemesh(x0, xmax, x_prev, du_prev, nr, ng, 1.0e-17);
-  np    = length(x);
+% regular random
+%   nr    = ceil(itbase^(it + 2));
+%   x     = makemesh(x0, xmax, [], [], nr, 0, 1.0e-10);
+
+% adaptive random
+%   nr    = ceil(itbase^(it + 1));
+%   ng    = ceil(itbase^(it + 2));
+%   x     = makemesh(x0, xmax, x_prev, du_prev, nr, ng, 1.0e-10);
+
   u     = analytics(x);
   du    = zeros(1, length(x));
   duan  = danalytics(x);
@@ -50,10 +75,15 @@ for it=1:itmax
       end
   end
 
-  eps   = max(abs(duan - du)); % sqrt(trapz(x, (duan - du).^2));
-  hmax  = max(x(2:end) - x(1:end-1));
-  outlg = sprintf('%d points; max(h) = %e; ε = %e;', np, hmax, eps);
-  outcl = sprintf('%*d | %e | %e |', w, np, hmax, eps);
+%   eps   = sqrt(trapz((duan - du).^2));
+%   eps   = sqrt(sum((duan - du).^2))/length(du); % L2(x0, xmax) norm
+  eps   = max(abs(duan - du));                  %  C[x0, xmax] norm
+  h     = x(2:end) - x(1:end-1);
+  hmax  = max(h);
+  hmin  = min(h);
+
+  outlg = sprintf('%d points; max(h) = %e; min(h) = %e; ε = %e;', np, hmin, hmax, eps);
+  outcl = sprintf('%*d | %e | %e | %e |', w, np, hmin, hmax, eps);
 
   if it > 1
     rateps = eps_prev/eps;
@@ -90,6 +120,7 @@ for it=1:itmax
   eps_prev  = eps;
   np_prev   = np;
   hmax_prev = hmax;
+  hmin_prev = hmin;
 end
 
 
