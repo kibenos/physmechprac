@@ -57,7 +57,8 @@ for it=1:itmax
 %   nr    = ceil(itbase^(it + 1));
 %   ng    = ceil(itbase^(it + 2));
 %   x     = makemesh(x0, xmax, x_prev, du_prev, nr, ng, 1.0e-10);
-
+ 
+  np    = lenght(x);
   u     = analytics(x);
   du    = zeros(1, length(x));
   duan  = danalytics(x);
