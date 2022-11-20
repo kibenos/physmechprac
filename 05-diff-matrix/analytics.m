@@ -1,3 +1,3 @@
 function uan = analytics(x)
-    uan = sin(x);
+    uan = exp(sin(x));
 end

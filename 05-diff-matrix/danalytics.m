@@ -1,3 +1,3 @@
 function uan = danalytics(x)
-    uan = -sin(x);
+    uan = cos(x).*exp(sin(x));
 end

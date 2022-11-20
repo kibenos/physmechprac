@@ -4,10 +4,30 @@ colormap jet
 figure(1)
 
 x0     = 0;
-xmax   = 10;
-diffop = [0 0 1];
+xmax   = 20;
+diffop = [0 1];
 itmax  = 10;
 itbase = 2;
+
+%% seting pattern
+patsz     = 3; % pattern size
+cpattern  = zeros(1, patsz);
+lpatterns = zeros(floor(patsz/2), patsz);
+rpatterns = zeros(floor(patsz/2), patsz);
+
+if mod(patsz, 2)
+  cpattern = ceil(patsz/2)-patsz:floor(patsz/2)
+else
+  cpattern = [-patsz/2:-1, 1:patsz/2]
+end
+
+for i=1:floor(patsz/2)
+  lpatterns(i, :) = 1-i:patsz-i;
+  rpatterns(i, :) = -patsz+i:i-1;
+end
+
+lpatterns
+rpatterns = rpatterns(end:-1:1,:)
 
 %% init
 x_prev    = [];
@@ -32,10 +52,6 @@ for it=1:itmax
   u    = analytics(x);
   du   = zeros(1, length(x));
   duan = danalytics(x);
-  
-  cpattern  = [-2 -1 0 1 2];
-  lpatterns = [0 1 2 3 4; -1 0 1 2 3];
-  rpatterns = [-3 -2 -1 0 1; -4 -3 -2 -1 0];
   
   D  = getmatrix(diffop, x, cpattern, lpatterns, rpatterns);
   du = u*D';
