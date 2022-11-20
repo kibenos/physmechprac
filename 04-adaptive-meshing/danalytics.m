@@ -1,3 +1,3 @@
 function uan = danalytics(x)
-    uan = zeta(2, x);
+    uan = -sin(x);
 end

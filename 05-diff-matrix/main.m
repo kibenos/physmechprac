@@ -9,7 +9,7 @@ diffop = [0 1];
 itmax  = 10;
 itbase = 2;
 
-%% seting pattern
+%% setting pattern
 patsz     = 3; % pattern size
 cpattern  = zeros(1, patsz);
 lpatterns = zeros(floor(patsz/2), patsz);

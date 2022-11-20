@@ -1,4 +1,4 @@
-function [x, u, duan] = wrapmesh(x_prev, u_prev, duan_prev, wraps, cpattern, lpatterns, rpatterns, order)
+function [x, u, duan] = wrapmesh(x_prev, u_prev, duan_prev, wraps, cpattern, lpatterns, rpatterns, order, eps)
     wrap = {[]};
     idx  = {[]};
 
@@ -28,8 +28,6 @@ function [x, u, duan] = wrapmesh(x_prev, u_prev, duan_prev, wraps, cpattern, lpa
     idx = cat(2, idx{:});
 
     % validate mesh
-    eps        = 1e-10;
-
     mesh_prev  = [x; idx];
     mesh_prev  = sortrows(mesh_prev.', 1).'; % sort by first row
     mesh       = zeros(2, size(mesh_prev, 2) + 2);
