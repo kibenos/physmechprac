@@ -1,3 +1,3 @@
-function uan = analytics(x)
-    uan = exp(sin(x));
+function u = analytics(x, a, b)
+    u = a * cos(x) + b * sin(x);
 end
