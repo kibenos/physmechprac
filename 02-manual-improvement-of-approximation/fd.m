@@ -60,7 +60,7 @@ for mesh=1:meshmax
   plot(xfin, uanfin, 'color', 'green');
   if mesh > 1
     plot(x_prev, u_prev, '--.', 'color', [.6, .6, .6]);
-    plot(x, u, '--.', 'color',' red');
+    plot(x, u, '--.', 'color','red');
     legend('analytics', sprintf('%d points', np_prev), sprintf('%d points', np));
   else
     plot(x, u, '--.', 'color', 'red');
