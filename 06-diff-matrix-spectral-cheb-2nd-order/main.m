@@ -3,8 +3,6 @@ clf
 colormap jet
 figure(1)
 
-x0     = -1;
-xmax   = 1;
 diffop = [1 0 1];
 
 a      = 2;
@@ -39,7 +37,7 @@ for it=1:itmax
   uan     = analytics(x, a, b);
   
   %% SYSTEM
-  M = D2 + D0;
+  M = diffop(1) * D0 + diffop(2) * D1 + diffop(3) * D2;
 
   %% RHS
   RHS = rhs(x);
